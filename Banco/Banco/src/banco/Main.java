@@ -1,60 +1,198 @@
 package banco;
 
-import java.util.Scanner;
-
+import model.Cliente;
 import model.ContaCorrente;
 import util.Keyboard;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Main {
-	
-	static ContaCorrente[] contas = new ContaCorrente[10];
-	static int qtd_contas = 0;
 
-	public static void main(String[] args) {		
-		
-		int opcao = 0;			
-		do{
-			opcao = Keyboard.menu("Cadastrar Contas/Listar Contas/Sair");
-			switch(opcao)
-			{
-				case 1:
-					CadastrarContas();
-					break;
-				case 2:
-					ListarContas();
-					break;
+	public static void main(String[] args) throws Throwable {
+
+		System.out.println(" ");
+		System.out.println("======================= Bem-vindo ao Banco ========================");
+
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+		List<ContaCorrente> contasCorrentes = new ArrayList<>();
+		int option = 0;
+
+        while (option != 8) {
+			interfaceBanco();
+			System.out.print("Opcao: ");
+            String opcao = reader.readLine();
+            option = Integer.parseInt(opcao);
+
+            switch (option) {
+            case 1 -> cadastrarContas(reader, contasCorrentes);
+            case 2 -> listarContas(contasCorrentes);
+			case 3 -> excluirContas(reader, contasCorrentes);
+			case 4 -> efetuarDepositos(reader,contasCorrentes);
+			case 5 -> efetuarSaques(reader,contasCorrentes);
+			case 6 -> consultarContas(contasCorrentes, reader);
+//			case 7 -> efetuarTransferenciaEntreContas;
+            }
+        }
+	}
+
+	private static void interfaceBanco() {
+		System.out.println("Selecione uma opcao:");
+		System.out.println("        1. Cadastrar Contas");
+		System.out.println("        2. Listar Contas");
+		System.out.println("        3. Excluir Contas");
+		System.out.println("        4. Efetuar Depositos");
+		System.out.println("        5. Efetuar Saques ");
+		System.out.println("        6. Consular Contas ");
+		System.out.println("        7. Efetuar Transferencia entre contas ");
+		System.out.println("        8. Exit ");
+		System.out.println("===========================================================================================");
+	}
+
+	private static void efetuarSaques(BufferedReader reader, List<ContaCorrente> contasCorrentes) throws IOException {
+		long numeroDaConta;
+		double valorSaque;
+
+		System.out.println(" ");
+		System.out.println("--------------------------------------------");
+		System.out.println("Saque");
+		System.out.println(" ");
+
+		System.out.print("Digite o numero da conta que voce deseja sacar: ");
+		numeroDaConta = Long.parseLong(reader.readLine());
+		System.out.println(" ");
+
+		System.out.print("Digite o valor do saque: ");
+		valorSaque = Long.parseLong(reader.readLine());
+
+		for(ContaCorrente contaCorrente : contasCorrentes){
+			if(numeroDaConta == contaCorrente.getNumeroDaConta()){
+				contaCorrente.sacar(valorSaque);
+				System.out.println(" ");
 			}
-			
-		} while(opcao < 3);
-		
-		System.out.println("Fim do programa!");		
-
-	}
-	
-	public static void CadastrarContas()
-	{	
-		ContaCorrente conta = new ContaCorrente(qtd_contas++);
-		String nome = Keyboard.readString("Informe o nome: ");		
-		conta.setNome_do_cliente(nome);
-		conta.setCredito_especial(100);		
-		contas[qtd_contas] = conta;
-		qtd_contas = qtd_contas + 1;
-	}
-	
-	public static void ListarContas()
-	{
-		for(int i = 0; i < qtd_contas; i++) 
-		{
-			System.out.print("Numero da conta:");
-			System.out.println(contas[i].getNumero_da_conta());
-			System.out.print("Nome do cliente:");
-			System.out.println(contas[i].getNome_do_cliente());
-			System.out.print("Saldo:");
-			System.out.println(contas[i].getSaldo_da_conta());
-			System.out.print("Credito Especial:");
-			System.out.println(contas[i].getCredito_especial());
 		}
 	}
-	
-	
+
+	private static void efetuarDepositos(BufferedReader reader, List<ContaCorrente> contasCorrentes) throws IOException {
+		long numeroDaConta;
+		double valorDeposito;
+
+		System.out.println(" ");
+		System.out.println("--------------------------------------------");
+		System.out.println("Deposito");
+		System.out.println("--------------------------------------------");
+		System.out.println(" ");
+		System.out.print("Digite o numero da conta que voce deseja depositar: ");
+		numeroDaConta = Long.parseLong(reader.readLine());
+		System.out.println(" ");
+		System.out.print("Digite o valor do deposito: ");
+		valorDeposito = Long.parseLong(reader.readLine());
+
+		for(ContaCorrente contaCorrente : contasCorrentes){
+			if(numeroDaConta == contaCorrente.getNumeroDaConta()){
+					contaCorrente.depositar(valorDeposito);
+					System.out.println(" ");
+			}
+		}
+	}
+
+	public static void excluirContas(BufferedReader reader, List<ContaCorrente> contasCorrentes) throws IOException {
+		System.out.println(" ");
+		System.out.println("--------------------------------------------");
+		System.out.println("Excluir Conta");
+		System.out.println("--------------------------------------------");
+		System.out.println(" ");
+		System.out.print("Digite o numero da conta que voce deseja excluir: ");
+		System.out.println(" ");
+
+		long numeroDaConta = Long.parseLong(reader.readLine());
+
+		for (int i = 0; i < contasCorrentes.size(); i++) {
+			if (numeroDaConta == contasCorrentes.get(i).getNumeroDaConta()) {
+				contasCorrentes.remove(contasCorrentes.get(i));
+				System.out.println(" ");
+				System.out.println("Aluno Removido com sucesso!!");
+				System.out.println(" ");
+			}
+		}
+	}
+
+	public static void consultarContas(List<ContaCorrente> contasCorrentes, BufferedReader reader) throws IOException {
+
+		System.out.println(" ");
+		System.out.println("--------------------------------------------");
+		System.out.println("Consultar Conta");
+		System.out.println("--------------------------------------------");
+		System.out.println(" ");
+		System.out.print("Digite o numero da conta que voce deseja buscar: ");
+		System.out.println(" ");
+
+		long numeroDaConta = Long.parseLong(reader.readLine());
+
+		for(ContaCorrente contaCorrente : contasCorrentes){
+			if(numeroDaConta == contaCorrente.getNumeroDaConta()){
+				System.out.println(contaCorrente.imprimirDados());
+			}
+		}
+	}
+
+    public static void listarContas(List<ContaCorrente> contas){
+        System.out.println(" ");
+        System.out.println("------------ Lista de Contas ------------");
+		System.out.println(" ");
+
+		if(contas.isEmpty()){
+			System.out.println(" ");
+			System.out.println("Nao ha contas registradas");
+			System.out.println(" ");
+		}
+
+        for (ContaCorrente conta : contas) {
+            System.out.println(conta);
+            System.out.println(" ");
+        }
+    }
+
+	public static void cadastrarContas(BufferedReader reader, List<ContaCorrente> contasCorrentes) throws Throwable {
+
+		Long numeroDaConta;
+		String nome;
+		double saldo = 0;
+		double creditoEspecial = 100;
+
+		System.out.println(" ");
+		System.out.println("--------------------------------------------");
+		System.out.println("Cadastro de conta");
+		System.out.println("--------------------------------------------");
+
+		System.out.print("Informe o numero da conta:");
+		numeroDaConta = Long.parseLong(reader.readLine());
+
+        verificarNumeroDeConta(contasCorrentes, numeroDaConta);
+
+        System.out.print("Qual o nome do cliente:");
+		nome = reader.readLine();
+
+		Cliente cliente = new Cliente(nome);
+		ContaCorrente conta = new ContaCorrente(numeroDaConta, cliente, saldo, creditoEspecial);
+		contasCorrentes.add(conta);
+		System.out.println(" ");
+		System.out.println("Conta cadastrada com sucesso!");
+		System.out.println(" ");
+
+	}
+
+	//mexer depois
+    public static void verificarNumeroDeConta(List<ContaCorrente> contasCorrentes, Long numeroDaConta) {
+
+        for(ContaCorrente contaCorrente : contasCorrentes){
+            if(numeroDaConta == contaCorrente.getNumeroDaConta()){
+				System.err.println("Ja existe uma conta com esse numero! Cadastre uma conta com um numero diferente");
+            }
+        }
+    }
 }

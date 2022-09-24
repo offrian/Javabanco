@@ -2,58 +2,86 @@ package model;
 
 public class ContaCorrente {
 
-    private int numero_da_conta;
-    private String nome_do_cliente;
-    private double saldo_da_conta;
-    private double credito_especial;
-	
-	public ContaCorrente(int numero_da_conta)
-	{
-		this.numero_da_conta = numero_da_conta;
-		this.nome_do_cliente = "";
-		this.saldo_da_conta = 0.0;
-		this.credito_especial = 0.0;
+    private Long numeroDaConta;
+    private Cliente nomeDoCliente;
+    private double saldoDaConta;
+    private double creditoEspecial;
+
+	public ContaCorrente(Long numeroDaConta, Cliente nomeDoCliente, double saldoDaConta,
+						 double creditoEspecial) {
+		this.numeroDaConta = numeroDaConta;
+		this.nomeDoCliente = nomeDoCliente;
+		this.saldoDaConta = saldoDaConta;
+		this.creditoEspecial = creditoEspecial;
 	}
 
-	public String getNome_do_cliente() {
-		return nome_do_cliente;
+	public ContaCorrente(Long numeroDaConta) {
+		this.numeroDaConta = numeroDaConta;
 	}
 
-	public void setNome_do_cliente(String nome_do_cliente) {
-		this.nome_do_cliente = nome_do_cliente;
+	public Long getNumeroDaConta() {
+		return numeroDaConta;
 	}
 
-	public double getCredito_especial() {
-		return credito_especial;
+	public Cliente getNomeDoCliente() {
+		return nomeDoCliente;
 	}
 
-	public void setCredito_especial(double credito_especial) {
-		this.credito_especial = credito_especial;
+	public void setNomeDoCliente(Cliente nomeDoCliente) {
+		this.nomeDoCliente = nomeDoCliente;
 	}
 
-	public int getNumero_da_conta() {
-		return numero_da_conta;
+	public double getSaldoDaConta() {
+		return saldoDaConta;
 	}
 
-	public double getSaldo_da_conta() {
-		return saldo_da_conta;
+	public double getCreditoEspecial() {
+		return creditoEspecial;
 	}
-	
-	public String Sacar(double valorSaque)
-	{
-		return "";
+
+	public void setCreditoEspecial(double creditoEspecial) {
+		this.creditoEspecial = creditoEspecial;
 	}
-	
-	public String Deposito(double valorDeposito)
-	{
-		return "";
+
+	public void sacar(double valorSaque){
+
+		double valorSomadoComCreditoEspecial = saldoDaConta + creditoEspecial;
+
+		if(valorSaque > saldoDaConta && valorSaque <= valorSomadoComCreditoEspecial){
+			double calculo = (saldoDaConta - valorSaque) + creditoEspecial;
+			this.creditoEspecial = calculo;
+		}
+
+		if(valorSomadoComCreditoEspecial < valorSaque){
+			System.out.println("Saldo insuficiente para saque.");
+		}else{
+			 double saldoFinal = saldoDaConta -= valorSaque;
+			System.out.println("Voce fez um saque de R$" + valorSaque +
+					", seu saldo em conta e: R$" + saldoFinal);
+		}
 	}
-	
-	public void Imprimir()
-	{
-		System.out.print("Teste");
+
+	public void depositar(double valor){
+		if(this.creditoEspecial < 100){
+			double valorAtualDoCreditoEspecial = creditoEspecial - 100;
+			double calculoCreditoEspecial = (valorAtualDoCreditoEspecial * -1) + valor;
+			this.creditoEspecial = calculoCreditoEspecial;
+
+
+		}else{
+			this.saldoDaConta += valor;
+		}
 	}
-	
-	
-	
+
+	public String imprimirDados(){
+		return toString();
+	}
+
+	@Override
+	public String toString() {
+		return "Num Conta        Nome do Cliente 		  Saldo                                 Credito Epecial\n" +
+				"--------- ------------------------------ ----------\n" +
+				numeroDaConta + "             " + nomeDoCliente.getNome() + "                      " + saldoDaConta + "                        " + creditoEspecial;
+	}
+
 }

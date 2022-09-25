@@ -62,14 +62,18 @@ public class ContaCorrente {
 	}
 
 	public void depositar(double valor){
-		if(this.creditoEspecial < 100){
-			double valorAtualDoCreditoEspecial = creditoEspecial - 100;
-			double calculoCreditoEspecial = (valorAtualDoCreditoEspecial * -1) + valor;
-			this.creditoEspecial = calculoCreditoEspecial;
 
+		double valorAtualDoCreditoEspecial;
 
-		}else{
-			this.saldoDaConta += valor;
+		double valorSomado = this.saldoDaConta += valor;
+
+		if (this.creditoEspecial < 100){
+			valorAtualDoCreditoEspecial = creditoEspecial - 100;
+
+			while (valorAtualDoCreditoEspecial != 101){
+				valorSomado --;
+				this.creditoEspecial = valorAtualDoCreditoEspecial++;
+			}
 		}
 	}
 
@@ -79,9 +83,9 @@ public class ContaCorrente {
 
 	@Override
 	public String toString() {
-		return "Num Conta        Nome do Cliente 		  Saldo                                 Credito Epecial\n" +
+		return "Num Conta        Nome do Cliente 		  Saldo       " +
 				"--------- ------------------------------ ----------\n" +
-				numeroDaConta + "             " + nomeDoCliente.getNome() + "                      " + saldoDaConta + "                        " + creditoEspecial;
+				numeroDaConta + "             " + nomeDoCliente.getNome() + "                 " + saldoDaConta ;
 	}
 
 }

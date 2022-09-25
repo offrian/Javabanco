@@ -57,10 +57,7 @@ public class Main {
 		long numeroDaConta;
 		double valorSaque;
 
-		System.out.println(" ");
-		System.out.println("--------------------------------------------");
-		System.out.println("Saque");
-		System.out.println(" ");
+		layoutAba("Saque");
 
 		System.out.print("Digite o numero da conta que voce deseja sacar: ");
 		numeroDaConta = Long.parseLong(reader.readLine());
@@ -81,11 +78,8 @@ public class Main {
 		long numeroDaConta;
 		double valorDeposito;
 
-		System.out.println(" ");
-		System.out.println("--------------------------------------------");
-		System.out.println("Deposito");
-		System.out.println("--------------------------------------------");
-		System.out.println(" ");
+		layoutAba("Deposito");
+
 		System.out.print("Digite o numero da conta que voce deseja depositar: ");
 		numeroDaConta = Long.parseLong(reader.readLine());
 		System.out.println(" ");
@@ -98,6 +92,14 @@ public class Main {
 					System.out.println(" ");
 			}
 		}
+	}
+
+	private static void layoutAba(String aba) {
+		System.out.println(" ");
+		System.out.println("--------------------------------------------");
+		System.out.println(aba);
+		System.out.println("--------------------------------------------");
+		System.out.println(" ");
 	}
 
 	public static void excluirContas(BufferedReader reader, List<ContaCorrente> contasCorrentes) throws IOException {
